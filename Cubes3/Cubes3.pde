@@ -7,7 +7,7 @@ void setup()
 
 void draw()
 {
-  int frames = 24 * 4;
+  int frames = 24 * 3;
   float t = (float)frameCount / frames;
   
   background(0);
@@ -22,10 +22,10 @@ void draw()
   );
 
   rotateX(-0.5 - 0.05 * sin(PI * 4 * t));
-  rotateY(-0.5 - 0.05 * cos(PI * 2 * t));
+  rotateY(t * PI);
   
   int columns = 8;
-  color c0 = color(0.8, 0, 0);
+  color c0 = color(0.9, 0.3, 0);
   color c1 = color(1, 1, 0.8);
   for (int ix = 0; ix < columns; ix++)
   {
@@ -42,7 +42,7 @@ void draw()
       
         pushMatrix();
         translate(x, z, y);
-        fill(lerpColor(c0, c1, s));
+        fill(lerpColor(c0, c1, s * s * s));
         box(s);
         popMatrix();
       }

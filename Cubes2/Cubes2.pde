@@ -7,7 +7,7 @@ void setup()
 
 void draw()
 {
-  int frames = 24 * 4;
+  int frames = 24 * 3;
   float t = (float)frameCount / frames;
   
   background(1);
@@ -45,5 +45,5 @@ void draw()
     }
   }
   
-  if (frameCount <= frames) saveFrame();
+  //if (frameCount <= frames) saveFrame();
 }
