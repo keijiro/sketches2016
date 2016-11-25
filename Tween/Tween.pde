@@ -75,6 +75,8 @@ void draw()
   drawBall(x3, 0.8, true);
 
   x3h.append(x3);
+
+//  if (frameCount >= totalFrames && frameCount < totalFrames * 2) saveFrame();
 }
 
 void drawBall(float x, float y, boolean fg)
