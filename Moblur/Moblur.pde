@@ -18,8 +18,8 @@ void setup()
   float sum = 0.0;
   for (int i = 0; i < N; i++)
   {
-    float d = (i - 0.5 * N) * 2 / N;
-    gaussian[i] = exp(-d * d * 0.5 * 1);
+    float d = (i + 0.5) * 2 / N - 1;
+    gaussian[i] = exp(-1.5 * d * d);
     sum += gaussian[i];
   }
   for (int i = 0; i < N; i++)
@@ -31,6 +31,9 @@ void draw()
   float totalFrames = 13;
   float t = (float)frameCount / totalFrames;
   float delta = 1.0 / totalFrames;
+  
+  if (frameCount > totalFrames * 2)
+    t = (float)((frameCount - totalFrames * 2) / 5) / totalFrames;
   
   background(1);
   
@@ -44,14 +47,14 @@ void draw()
   
   for (int i = 0; i < N; i++)
   {
-    float dt = ((float)i / N - 0.5) * delta;
+    float dt = ((i + 0.5) / N - 0.5) * delta;
     
     // Box filter
     float w1 = 1.0 / N;
     
     // Triangle filter
-    float w2 = (i + 1) * 2.0 / N;
-    if (i > N / 2) w2 = 2 - w2;
+    float w2 = (i + 0.5) * 2.0 / N;
+    if (w2 > 1) w2 = 2 - w2;
     w2 *= 2.0 / N;
     
     // Gaussian filter
@@ -62,7 +65,7 @@ void draw()
     drawBall(position(t + dt), 0.8, w3);
   }
 
-//  if (frameCount >= totalFrames && frameCount < totalFrames * 2) saveFrame();
+  if (frameCount <= 7 * totalFrames) saveFrame();
 }
 
 void drawBall(float x, float y, float alpha)
