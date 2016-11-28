@@ -33,7 +33,7 @@ void draw()
   float delta = 1.0 / totalFrames;
   
   if (frameCount > totalFrames * 2)
-    t = (float)((frameCount - totalFrames * 2) / 5) / totalFrames;
+    t = round((frameCount - totalFrames * 2) / 5) / totalFrames;
   
   background(1);
   
