@@ -26,6 +26,4 @@ void draw()
       set(x, y, c);
     }
   }
-  
-  if (frameCount <= 20) saveFrame();
 }
