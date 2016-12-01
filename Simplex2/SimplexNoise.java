@@ -25,16 +25,23 @@
 // General Public License for more details.
 //
 
-static final class SimplexNoise
+final class SimplexNoise
 {
-  // 2D simplex noise with derivatives.
-  static final float sdnoise2(float x, float y, float[] dnoise)
+  // The noise value from the last calculation
+  public float value;
+  
+  // The derivative from the last calculation
+  public float ddx;
+  public float ddy;
+  
+  // 2D simplex noise
+  final float calculate(float x, float y)
   {
     // Skewing factors for 2D simplex grid:
     // F2 = 0.5*(sqrt(3.0)-1.0)
     // G2 = (3.0-Math.sqrt(3.0))/6.0
-    final float F2 = 0.366025403;
-    final float G2 = 0.211324865;
+    final float F2 = 0.366025403f;
+    final float G2 = 0.211324865f;
 
     float n0, n1, n2; // Noise contributions from the three simplex corners
     float gx0, gy0, gx1, gy1, gx2, gy2; // Gradients at simplex corners
@@ -43,10 +50,10 @@ static final class SimplexNoise
     float s = (x + y) * F2; // Hairy factor for 2D
     float xs = x + s;
     float ys = y + s;
-    int i = floor(xs);
-    int j = floor(ys);
+    int i = (int)Math.floor(xs);
+    int j = (int)Math.floor(ys);
 
-    float t = float(i + j) * G2;
+    float t = (float)(i + j) * G2;
     float X0 = i - t; // Unskew the cell origin back to (x,y) space
     float Y0 = j - t;
     float x0 = x - X0; // The x,y distances from the cell origin
@@ -125,40 +132,40 @@ static final class SimplexNoise
 
     // Add contributions from each corner to get the final noise value.
     // The result is scaled to return values in the interval [-1, 1].
-    float noise = 40 * (n0 + n1 + n2);
+    value = 40 * (n0 + n1 + n2);
 
     // Compute derivative.
     // A straight, unoptimised calculation would be like:
-    //   dnoise_dx  = -8 * t20 * t0 * x0 * (gx0 * x0 + gy0 * y0) + t40 * gx0;
-    //   dnoise_dy  = -8 * t20 * t0 * y0 * (gx0 * x0 + gy0 * y0) + t40 * gy0;
-    //   dnoise_dx += -8 * t21 * t1 * x1 * (gx1 * x1 + gy1 * y1) + t41 * gx1;
-    //   dnoise_dy += -8 * t21 * t1 * y1 * (gx1 * x1 + gy1 * y1) + t41 * gy1;
-    //   dnoise_dx += -8 * t22 * t2 * x2 * (gx2 * x2 + gy2 * y2) + t42 * gx2;
-    //   dnoise_dy += -8 * t22 * t2 * y2 * (gx2 * x2 + gy2 * y2) + t42 * gy2;
+    //   ddx  = -8 * t20 * t0 * x0 * (gx0 * x0 + gy0 * y0) + t40 * gx0;
+    //   ddy  = -8 * t20 * t0 * y0 * (gx0 * x0 + gy0 * y0) + t40 * gy0;
+    //   ddx += -8 * t21 * t1 * x1 * (gx1 * x1 + gy1 * y1) + t41 * gx1;
+    //   ddy += -8 * t21 * t1 * y1 * (gx1 * x1 + gy1 * y1) + t41 * gy1;
+    //   ddx += -8 * t22 * t2 * x2 * (gx2 * x2 + gy2 * y2) + t42 * gx2;
+    //   ddy += -8 * t22 * t2 * y2 * (gx2 * x2 + gy2 * y2) + t42 * gy2;
     float temp0 = t20 * t0 * (gx0 * x0 + gy0 * y0);
-    dnoise[0] = temp0 * x0;
-    dnoise[1] = temp0 * y0;
+    ddx = temp0 * x0;
+    ddy = temp0 * y0;
     
     float temp1 = t21 * t1 * (gx1 * x1 + gy1 * y1);
-    dnoise[0] += temp1 * x1;
-    dnoise[1] += temp1 * y1;
+    ddx += temp1 * x1;
+    ddy += temp1 * y1;
     
     float temp2 = t22 * t2 * (gx2 * x2 + gy2 * y2);
-    dnoise[0] += temp2 * x2;
-    dnoise[1] += temp2 * y2;
-    dnoise[0] *= -8;
-    dnoise[1] *= -8;
-    dnoise[0] += t40 * gx0 + t41 * gx1 + t42 * gx2;
-    dnoise[1] += t40 * gy0 + t41 * gy1 + t42 * gy2;
-    dnoise[0] *= 40; // Scale derivative to match the noise scaling
-    dnoise[1] *= 40;
+    ddx += temp2 * x2;
+    ddy += temp2 * y2;
+    ddx *= -8;
+    ddy *= -8;
+    ddx += t40 * gx0 + t41 * gx1 + t42 * gx2;
+    ddy += t40 * gy0 + t41 * gy1 + t42 * gy2;
+    ddx *= 40; // Scale derivative to match the noise scaling
+    ddy *= 40;
     
-    return noise;
+    return value;
   }
   
   // Helper functions to compute gradients in 1D to 4D
   // and gradients-dot-residualvectors in 2D to 4D.
-  static final float grad2x(int hash)
+  static float grad2x(int hash)
   {
     return grad2lut[hash & 7][0];
   }
