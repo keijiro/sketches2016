@@ -1,9 +1,12 @@
+final boolean colored = true;
+
 void setup()
 {
   size(500, 500, P3D);
   colorMode(HSB, 1);
   frameRate(24);
-  stroke(0, 0, 0);
+  stroke(0, 0, colored ? 0.4 : 0);
+  smooth(4);
 }
 
 void draw()
@@ -11,7 +14,10 @@ void draw()
   int totalFrames = 24 * 4;
   float time = 1.0 / totalFrames * frameCount;
 
-  background(0, 0, 1);
+  if (colored)
+    background(0.25, 0.05, 1);
+  else
+    background(0.03, 0.07, 1);
 
   randomSeed(1);
   noiseDetail(1);
@@ -45,6 +51,9 @@ void draw()
       float s = lerp(0.4, 1.1, em);
       
       s *= abs((id * 0.07151 + time * 6) % 2 - 1);
+      
+      if (colored)
+        fill(1 - s * 0.6, 0.4, 1);
 
       pushMatrix();
       translate(0, y, 0);
@@ -57,5 +66,5 @@ void draw()
     }
   }
   
-  if (frameCount <= totalFrames) saveFrame();
+//  if (frameCount <= totalFrames) saveFrame();
 }
