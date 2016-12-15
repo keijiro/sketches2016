@@ -1,11 +1,9 @@
-final boolean colored = false;
-
 void setup()
 {
   size(500, 500, P3D);
   colorMode(HSB, 1);
   frameRate(24);
-  stroke(0, 0, colored ? 0.4 : 0);
+  stroke(0, 0, 0.2);
   smooth(4);
 }
 
@@ -14,7 +12,7 @@ void draw()
   int totalFrames = 24 * 4;
   float time = 1.0 / totalFrames * frameCount;
 
-  background(0.13, colored ? 0.07 : 0.03, 1);
+  background(0.13, 0.07, 1);
 
   perspective(0.5, 1, 0.01, 100);
   
@@ -43,7 +41,7 @@ void draw()
       float a = abs((abs(1.0 / 23 * id - time * 6) % 2) - 1);
       float s2 = a + 0.15;
       
-      fill(lerp(0.18, 0.39, a), 0.3, 1);
+      fill(lerp(0, 0.2, a), 0.35, 1);
       
       pushMatrix();
       rotateY(phi);
