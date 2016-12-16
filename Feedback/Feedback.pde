@@ -1,16 +1,16 @@
 void setup()
 {
-  size(400, 400, P2D);
+  size(512, 512, P2D);
   colorMode(HSB, 1);
   background(0);
 }
 
 void draw()
 {
-  final int zoom = 8;
+  final int zoom = 12;
   
   int fnum = (frameCount - 1) % 96;
-  String fname = String.format("../Assets/Vicky/Vicky%02d.jpg", fnum + 1);
+  String fname = String.format("../Assets/Vicky/Vicky%02d.jpg", fnum);
   PImage tex = loadImage(fname);
   
   copy(
