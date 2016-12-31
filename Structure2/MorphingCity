@@ -1,0 +1,77 @@
+// a tweak of Structure2
+void setup()
+{
+  size(800, 500, P3D);
+  colorMode(RGB, 1);
+}
+
+void draw()
+{
+  int totalFrames = 24 * 15;
+  float t = (float)frameCount / totalFrames;
+  
+  //randomSeed((int)frameCount/200);
+  randomSeed(5);
+  
+  background(1);
+  
+  perspective(0.6, 1, 0.01, 100);
+  
+  camera(
+    0, -9 , 15,
+    0, 0, 0,
+    0, 1, 0
+  );
+
+  rotateX(-0.1 + 0.3 * sin(PI * t/8));
+  rotateY(-0.5 + 3 * sin(PI * t/5) );
+  
+  int columns = 6;
+  
+  float offs = 0.5 * columns - 0.5;
+  translate(-offs, 1, -offs);
+  
+  for (int ix = 0; ix < columns; ix++)
+  {
+    for (int iy = 0; iy < columns; iy++)
+    {
+      pushMatrix();
+      translate(1.1*ix, 0, 1.1*iy);
+      float mult = sin(PI * t/(iy/4 + 1))*cos(PI * t/(ix/3 + 2));
+      float ang = random(-0.1,0.1);
+      float w = random(0.8, 1.1);
+      float h = random(0.1, 0.4);
+      drawUnit(w * (1.9 - mult), h*(0.8 + 0.6 * mult), 1, (int)random(4, 6), ang*3*mult);
+      popMatrix();
+    }
+  }
+ // if (frameCount <= totalFrames) saveFrame("city-####.jpg");
+}
+
+void drawUnit(float w, float h, int lv, int maxLv, float ang)
+{
+  if (lv >= maxLv) return;
+
+  rotateY(ang);
+  translate(0, -0.5 * h, 0);
+  box(w, h, w);
+  translate(0, -0.45 * h, 0);
+
+  
+  for (int i = 0; i < 4; i++)
+  {
+    float w2 = w * 0.3 * random(1.4, 1.7);
+    float h2 = h * random(0.3, 1.3);
+    
+    float dx = w * 0.5 * ((i / 2) - 0.5);
+    float dy = w * 0.5 * ((i & 1) - 0.5);
+    
+    int maxLv2 = maxLv + (int)random(-0.8, 1.1);
+    
+    pushMatrix();
+    translate(dx, 0, dy);
+    float ang2 = random(-0.1,0.1);
+    drawUnit(w2, h2, lv + 1, maxLv2,ang2);
+    popMatrix();
+  }
+}
